@@ -8,5 +8,6 @@ from random import *
 pygame.init()
 
 DISP_WIDTH = 1000
-DISP_HEIGHT = 600
+DISP_HEIGHT = 800
 display = pygame.display.set_mode((10, 10))
+font = pygame.font.Font(None, 50)
