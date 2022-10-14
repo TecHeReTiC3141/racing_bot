@@ -8,45 +8,34 @@ class Car:
 
     def __init__(self, x, y):
         self.rect = self.image.get_rect(center=(x, y))
+        self.rotated_image = self.image.copy()
         self.speed = 0
         self.angle = 0
         self.velocity = pygame.math.Vector2(0, 0)
         self.acceleration = pygame.math.Vector2(0, 0)
-
+        self.surf_coords: tuple = self.rect.topleft
         self.mask = pygame.mask.from_surface(self.image)
-        self.surf_coord = self.rect.topleft
+        self.forward = self.rect.midright
+        self.back = self.rect.midleft
+        self.left = self.rect.midtop
+        self.right = self.rect.midbottom
 
     def draw(self, surface: pygame.Surface):
-        rotated_image = pygame.transform.rotate(self.image, degrees(self.angle))
-        # rotated_image.set_alpha(128)
-        self.mask = pygame.mask.from_surface(rotated_image)
-        # surface.blit(font.render(str(pygame.math.Vector2(round(cos(self.angle), 2), -round(sin(self.angle), 2))
-        #                              * self.speed), True, 'black'), (10, 10))
-        # surface.blit(self.mask.to_surface(), (self.rect.centerx - rotated_image.get_width() // 2,
-        #                              self.rect.centery - rotated_image.get_height() // 2))
-        self.surf_coord = (self.rect.centerx - rotated_image.get_width() // 2,
-                                     self.rect.centery - rotated_image.get_height() // 2)
-        surface.blit(rotated_image, (self.surf_coord))
+        self.rotated_image = pygame.transform.rotate(self.image, degrees(self.angle))
+        self.mask = pygame.mask.from_surface(self.rotated_image)
+        self.surf_coords = self.rotated_image.get_rect(center=self.rect.center).topleft
+        surface.blit(self.rotated_image, (self.surf_coords))
         # point of car 'echolocation'
-        pygame.draw.circle(surface, 'green', (round(self.rect.centerx +
-                                                    rotated_image.get_width() // 2 * cos(self.angle)),
-                                              round(self.rect.centery -
-                                                    rotated_image.get_height() // 2 * sin(self.angle))), 5)
-        pygame.draw.circle(surface, 'green', (round(self.rect.centerx -
-                                                    rotated_image.get_width() // 2 * cos(self.angle)),
-                                              round(self.rect.centery +
-                                                    rotated_image.get_height() // 2 * sin(self.angle))),
-                           5)
+        pygame.draw.circle(surface, 'green', self.forward, 5)
+        pygame.draw.circle(surface, 'green', self.back, 5)
 
-        pygame.draw.circle(surface, 'red', (round(self.rect.centerx +
-                                                    self.image.get_height() // 2 * sin(self.angle)),
-                                              round(self.rect.centery +
-                                                    self.image.get_height() // 2 * cos(self.angle))), 5)
-        pygame.draw.circle(surface, 'red', (round(self.rect.centerx -
-                                                    self.image.get_height() // 2 * sin(self.angle)),
-                                              round(self.rect.centery -
-                                                    self.image.get_height() // 2 * cos(self.angle))),
-                           5)
+        pygame.draw.circle(surface, 'yellow', self.left, 5)
+        pygame.draw.circle(surface, 'yellow', self.right, 5)
+
+    # TODO implement getting intersection of two lines
+    @staticmethod
+    def get_lines_intersection():
+        pass
 
     def move(self):
         keys = pygame.key.get_pressed()
@@ -67,3 +56,16 @@ class Car:
     def update(self):
         self.move()
         self.rect.move_ip(pygame.math.Vector2(cos(self.angle), -sin(self.angle)) * self.speed)
+
+        self.forward = (round(self.rect.centerx + self.rotated_image.get_width() // 2 * cos(self.angle)),
+                        round(self.rect.centery - self.rotated_image.get_height() // 2 * sin(self.angle)))
+
+        self.back = (round(self.rect.centerx - self.rotated_image.get_width() // 2 * cos(self.angle)),
+                    round(self.rect.centery + self.rotated_image.get_height() // 2 * sin(self.angle)))
+
+        self.left = (round(self.rect.centerx + self.image.get_height() // 2 * sin(self.angle)),
+                      round(self.rect.centery + self.image.get_height() // 2 * cos(self.angle)))
+
+        self.right = (round(self.rect.centerx - self.image.get_height() // 2 * sin(self.angle)),
+                    round(self.rect.centery - self.image.get_height() // 2 * cos(self.angle)))
+

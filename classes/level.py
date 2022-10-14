@@ -39,8 +39,8 @@ class Level:
         pygame.draw.polygon(self.surface, 'gray', self.inner)
         pygame.draw.lines(self.surface, 'black', True, self.inner, width=2)
         self.car.draw(self.surface)
-        if self.switch_mask and self.mask.overlap(self.car.mask, self.car.surf_coord):
-            overlap_mask = self.mask.overlap_mask(self.car.mask, self.car.surf_coord)
+        if self.switch_mask and self.mask.overlap(self.car.mask, self.car.surf_coords):
+            overlap_mask = self.mask.overlap_mask(self.car.mask, self.car.surf_coords)
             overlap_mask = overlap_mask.to_surface()
             overlap_mask.set_colorkey('black')
             self.surface.blit(overlap_mask, (0, 0))

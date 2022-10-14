@@ -1,7 +1,7 @@
 from scripts.map_generation import *
 
 display = pygame.display.set_mode((DISP_WIDTH, DISP_HEIGHT), 0, 42)
-pygame.display.set_caption('Racing game')
+pygame.display.set_caption('Racing Game')
 
 clock = pygame.time.Clock()
 level = gen_level()
