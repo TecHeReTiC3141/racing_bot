@@ -8,6 +8,15 @@ class Level:
         self.surface = pygame.Surface((DISP_WIDTH, DISP_HEIGHT))
         self.inner = inner
         self.outer = outer
+        self.surface.set_colorkey('blue')
+        self.surface.fill('grey')
+        pygame.draw.polygon(self.surface, 'blue', self.outer)
+        pygame.draw.polygon(self.surface, 'black', self.outer, width=2)
+
+        pygame.draw.polygon(self.surface, 'gray', self.inner)
+        pygame.draw.polygon(self.surface, 'black', self.inner, width=2)
+        self.mask = pygame.mask.from_surface(self.surface)
+
 
 
 
@@ -22,7 +31,7 @@ class Level:
 
     def draw(self, surface: pygame.Surface):
         self.surface.fill('grey')
-        pygame.draw.polygon(self.surface, 'white', self.outer)
+        pygame.draw.polygon(self.surface, 'blue', self.outer)
         pygame.draw.polygon(self.surface, 'black', self.outer, width=2)
 
         pygame.draw.polygon(self.surface, 'gray', self.inner)

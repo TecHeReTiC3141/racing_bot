@@ -7,7 +7,7 @@ clock = pygame.time.Clock()
 level = gen_level()
 
 while True:
-
+    display.fill('white')
     level.draw(display)
     level.game_cycle()
 

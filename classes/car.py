@@ -3,7 +3,7 @@ from scripts.const import *
 
 class Car:
     SPEED_EPS = .15
-    ANGLE_EPS = .08
+    ANGLE_EPS = .05
     image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load('images/bolid.png'), (25, 62)), 270).convert_alpha()
 
     def __init__(self, x, y):
@@ -26,6 +26,26 @@ class Car:
 
         surface.blit(rotated_image, (self.rect.centerx - rotated_image.get_width() // 2,
                                      self.rect.centery - rotated_image.get_height() // 2))
+        # point of car 'echolocation'
+        pygame.draw.circle(surface, 'green', (round(self.rect.centerx +
+                                                    rotated_image.get_width() // 2 * cos(self.angle)),
+                                              round(self.rect.centery -
+                                                    rotated_image.get_height() // 2 * sin(self.angle))), 5)
+        pygame.draw.circle(surface, 'green', (round(self.rect.centerx -
+                                                    rotated_image.get_width() // 2 * cos(self.angle)),
+                                              round(self.rect.centery +
+                                                    rotated_image.get_height() // 2 * sin(self.angle))),
+                           5)
+
+        pygame.draw.circle(surface, 'red', (round(self.rect.centerx +
+                                                    self.image.get_height() // 2 * sin(self.angle)),
+                                              round(self.rect.centery +
+                                                    self.image.get_height() // 2 * cos(self.angle))), 5)
+        pygame.draw.circle(surface, 'red', (round(self.rect.centerx -
+                                                    self.image.get_height() // 2 * sin(self.angle)),
+                                              round(self.rect.centery -
+                                                    self.image.get_height() // 2 * cos(self.angle))),
+                           5)
 
     def move(self):
         keys = pygame.key.get_pressed()
