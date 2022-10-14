@@ -14,6 +14,7 @@ class Car:
         self.acceleration = pygame.math.Vector2(0, 0)
 
         self.mask = pygame.mask.from_surface(self.image)
+        self.surf_coord = self.rect.topleft
 
     def draw(self, surface: pygame.Surface):
         rotated_image = pygame.transform.rotate(self.image, degrees(self.angle))
@@ -23,9 +24,9 @@ class Car:
         #                              * self.speed), True, 'black'), (10, 10))
         # surface.blit(self.mask.to_surface(), (self.rect.centerx - rotated_image.get_width() // 2,
         #                              self.rect.centery - rotated_image.get_height() // 2))
-
-        surface.blit(rotated_image, (self.rect.centerx - rotated_image.get_width() // 2,
-                                     self.rect.centery - rotated_image.get_height() // 2))
+        self.surf_coord = (self.rect.centerx - rotated_image.get_width() // 2,
+                                     self.rect.centery - rotated_image.get_height() // 2)
+        surface.blit(rotated_image, (self.surf_coord))
         # point of car 'echolocation'
         pygame.draw.circle(surface, 'green', (round(self.rect.centerx +
                                                     rotated_image.get_width() // 2 * cos(self.angle)),
@@ -65,5 +66,4 @@ class Car:
 
     def update(self):
         self.move()
-
         self.rect.move_ip(pygame.math.Vector2(cos(self.angle), -sin(self.angle)) * self.speed)
