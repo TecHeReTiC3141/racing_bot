@@ -29,7 +29,7 @@ class Level:
                 if event.key == K_m:
                     self.switch_mask = not self.switch_mask
 
-        self.car.update()
+        self.car.update(self.mask)
 
     def draw(self, surface: pygame.Surface):
         self.surface.fill('grey')
