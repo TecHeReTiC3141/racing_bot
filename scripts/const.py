@@ -13,3 +13,4 @@ SCALE = DISP_WIDTH / MAP_WIDTH
 
 display = pygame.display.set_mode((10, 10))
 font = pygame.font.Font(None, 50)
+small_font = pygame.font.Font(None, 30)

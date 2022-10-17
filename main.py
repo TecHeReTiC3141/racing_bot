@@ -11,6 +11,7 @@ while True:
     level.draw(display)
     level.game_cycle()
 
-    display.blit(font.render(f'FPS: {round(clock.get_fps())}', True, 'red'), (10, 50))
+    display.blit(font.render(f'FPS: {round(clock.get_fps())}',
+                             True, 'red'), (10, 50))
     pygame.display.update()
     clock.tick(60)
