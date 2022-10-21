@@ -35,7 +35,8 @@ class EchoPoint:
         cur_surf = pygame.Surface((1, 1))
         cur_point = pygame.Vector2(self.rect.center)
         cur_mask = pygame.mask.from_surface(cur_surf)
-        angle = angle % (2 * pi) + self.angle_delta
+        angle += self.angle_delta
+        angle %= (2 * pi)
         eps = .1
         while not mask.overlap(cur_mask, tuple(cur_point)) \
                 and 0 <= cur_point.x <= DISP_WIDTH and 0 <= cur_point.y <= DISP_HEIGHT:
