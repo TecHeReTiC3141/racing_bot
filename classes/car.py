@@ -4,7 +4,7 @@ from scripts.const import *
 class EchoPoint:
 
     def __init__(self, center: tuple, angle_delta, rotated: bool, dx_side: str, dy_side: str,
-                 dx, dy, dx_func, dy_func, color='green'):
+                 dx, dy, dx_func, dy_func, color='green', enabled=True):
         self.surface = pygame.Surface((10, 10))
         self.surface.set_colorkey('black')
         pygame.draw.circle(self.surface, 'green', (self.surface.get_width() // 2,
@@ -23,6 +23,7 @@ class EchoPoint:
 
         self.color = color
         self.rotated = rotated
+        self.enabled = enabled
 
     def update(self, center: pygame.Vector2, image_size, angle):
         width, height = image_size[0] // 2, image_size[1] // 2
@@ -82,6 +83,17 @@ class EchoPoint:
             surface.blit(dis, dist_pos)
 
 
+class RelEchoPoint(EchoPoint):
+
+    def __init__(self, rel: EchoPoint, dx, dy):
+        super().__init__(rel.rect.center, -rel.angle_delta, rel.rotated, 'width', 'height', dx, dy, sin, cos)
+        self.rel = rel
+
+    def update(self, center: pygame.Vector2, image_size, angle):
+        self.rect.center = (self.rel.rect.centerx + cos(angle) * self.dx,
+                            self.rel.rect.centery + sin(angle) * self.dy)
+
+
 class Car:
     MAX_SPEED = 5.
     SPEED_EPS = .2
@@ -102,8 +114,21 @@ class Car:
         self.echopoints: dict[str, EchoPoint] = {
             'forward': EchoPoint(self.rect.midright, 0, True, 'width', 'height', 1, -1, cos, sin),
             'back': EchoPoint(self.rect.midleft, pi, True, 'width', 'height', -1, 1, cos, sin),
-            'left': EchoPoint(self.rect.midtop, -pi / 2, False, 'height', 'height', -1, -1, sin, cos, 'blue'),
-            'right': EchoPoint(self.rect.midbottom, pi / 2, False, 'height', 'height', 1, 1, sin, cos, ),
+            'left': EchoPoint(self.rect.midtop, -pi / 2, False, 'height', 'height', -1, -1, sin, cos, 'blue',
+                              enabled=False),
+            'right': EchoPoint(self.rect.midbottom, pi / 2, False, 'height', 'height', 1, 1, sin, cos,
+                               enabled=False),
+        }
+
+        self.rel_echopoints: dict[str, RelEchoPoint] = {
+            'forward_left': RelEchoPoint(self.echopoints['left'], self.rect.width // 10 * 3,
+                                         -self.rect.width // 10 * 3),
+            'forward_right': RelEchoPoint(self.echopoints['right'], self.rect.width // 10 * 3,
+                                          -self.rect.width // 10 * 3),
+            'back_left': RelEchoPoint(self.echopoints['left'], -self.rect.width // 10 * 3,
+                                      self.rect.width // 10 * 4),
+            'back_right': RelEchoPoint(self.echopoints['right'], -self.rect.width // 10 * 3,
+                                       self.rect.width // 10 * 4),
         }
 
     def draw(self, surface: pygame.Surface, show_dist: bool):
@@ -113,7 +138,14 @@ class Car:
         surface.blit(self.rotated_image, self.surf_coords)
 
         for echo in self.echopoints:
+            if not self.echopoints[echo].enabled:
+                continue
             self.echopoints[echo].draw_coll_line(surface, self.angle, 0, show_dist)
+
+        for echo in self.rel_echopoints:
+            if not self.rel_echopoints[echo].enabled:
+                continue
+            self.rel_echopoints[echo].draw_coll_line(surface, self.angle, 0, show_dist)
 
     def move(self):
         keys = pygame.key.get_pressed()
@@ -137,7 +169,16 @@ class Car:
                            round(-sin(self.angle) * self.speed)))
 
         for echo in self.echopoints:
+
             self.echopoints[echo].update(pygame.Vector2(self.rect.center),
-                                         (self.rotated_image if self.echopoints[echo].rotated else self.image).get_size(),
+                                         (self.rotated_image if self.echopoints[
+                                             echo].rotated else self.image).get_size(),
                                          self.angle)
             self.echopoints[echo].find_collisions(self.angle, level_mask)
+
+        for echo in self.rel_echopoints:
+            self.rel_echopoints[echo].update(pygame.Vector2(self.rect.center),
+                                             (self.rotated_image if self.rel_echopoints[
+                                                 echo].rotated else self.image).get_size(),
+                                             self.angle)
+            self.rel_echopoints[echo].find_collisions(self.angle, level_mask)
