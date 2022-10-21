@@ -8,9 +8,9 @@ class Level:
         self.surface = pygame.Surface((DISP_WIDTH, DISP_HEIGHT))
         self.inner = inner
         self.outer = outer
-        self.surface.set_colorkey('blue')
+        self.surface.set_colorkey('yellow')
         self.surface.fill('grey')
-        pygame.draw.polygon(self.surface, 'blue', self.outer)
+        pygame.draw.polygon(self.surface, 'yellow', self.outer)
         pygame.draw.polygon(self.surface, 'black', self.outer, width=2)
 
         pygame.draw.polygon(self.surface, 'gray', self.inner)
@@ -36,7 +36,7 @@ class Level:
 
     def draw(self, surface: pygame.Surface):
         self.surface.fill('grey')
-        pygame.draw.polygon(self.surface, 'blue', self.outer)
+        pygame.draw.polygon(self.surface, 'yellow', self.outer)
         pygame.draw.lines(self.surface, 'black', True, self.outer, width=2)
 
         pygame.draw.polygon(self.surface, 'gray', self.inner)
