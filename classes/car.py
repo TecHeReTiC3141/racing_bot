@@ -65,9 +65,7 @@ class EchoPoint:
             return x0 + y0 / tan(angle), 0
         return x0 - (DISP_HEIGHT - y0) / tan(angle), DISP_HEIGHT
 
-    def draw_coll_line(self, surface, angle, dist_angle, show_dist):
-        dist_angle %= (2 * pi)
-        angle = angle % (2 * pi) + self.angle_delta
+    def draw_coll_line(self, surface, dist_angle, show_dist):
         point, coll = pygame.Vector2(self.rect.center), pygame.Vector2(self.coll)
         pygame.draw.circle(surface, self.color, point, 5)
         pygame.draw.line(surface, 'darkgreen', point,
@@ -97,7 +95,7 @@ class RelEchoPoint(EchoPoint):
 
 
 class Car:
-    MAX_SPEED = 7.5
+    MAX_SPEED = 5.
     SPEED_EPS = .2
     ANGLE_EPS = .05
     image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load('images/bolid.png'),
@@ -109,9 +107,11 @@ class Car:
         self.speed = 0
         self.angle = 0
         self.velocity = pygame.math.Vector2()
-        self.acceleration = pygame.math.Vector2()
         self.surf_coords: tuple = self.rect.topleft
         self.mask = pygame.mask.from_surface(self.image)
+
+        self.score = 0
+        self.loop = 0
 
         self.echopoints: dict[str, EchoPoint] = {
             'forward': EchoPoint(self.rect.midright, 0, True, 'width', 'height', 1, -1, cos, sin),
@@ -141,12 +141,12 @@ class Car:
         for echo in self.echopoints:
             if not self.echopoints[echo].enabled:
                 continue
-            self.echopoints[echo].draw_coll_line(surface, self.angle, 0, show_dist)
+            self.echopoints[echo].draw_coll_line(surface, 0, show_dist)
 
         for echo in self.rel_echopoints:
             if not self.rel_echopoints[echo].enabled:
                 continue
-            self.rel_echopoints[echo].draw_coll_line(surface, self.angle, 0, show_dist)
+            self.rel_echopoints[echo].draw_coll_line(surface, 0, show_dist)
 
     def move(self):
         keys = pygame.key.get_pressed()
@@ -163,6 +163,7 @@ class Car:
             self.angle += self.ANGLE_EPS
         if keys[K_d]:
             self.angle -= self.ANGLE_EPS
+        # self.speed = self.MAX_SPEED
 
     def update(self, level_mask: pygame.mask.Mask):
         self.move()

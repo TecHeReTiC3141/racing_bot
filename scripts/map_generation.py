@@ -10,11 +10,19 @@ def gen_level() -> Level:
     cart = level_map.get_layer_by_name('RacingCart')
     inner: list[tuple] = []
     outer: list[tuple] = []
+    money: list[Money] = []
+    finish_line: Finish = None
+
     for obj in cart:
         if obj.name == 'inner':
             inner = [(point.x * XSCALE, point.y * YSCALE) for point in obj.points]
         elif obj.name == 'outer':
             outer = [(point.x * XSCALE, point.y * YSCALE) for point in obj.points]
+        elif obj.name == 'finish_line':
+            finish_line = Finish(obj.x * XSCALE, obj.y * YSCALE,
+                                 obj.height * YSCALE, obj.width * YSCALE)
+        elif obj.name == 'money':
+            money.append(Money(obj.x * XSCALE, obj.y * YSCALE))
 
-    level = Level(inner, outer)
+    level = Level(inner, outer, money, finish_line)
     return level

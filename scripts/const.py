@@ -3,7 +3,7 @@ from pygame.locals import *
 from math import *
 from random import *
 from pathlib import Path
-from neat import Config
+import neat
 
 pygame.init()
 
@@ -15,3 +15,5 @@ XSCALE, YSCALE = DISP_WIDTH / MAP_WIDTH, DISP_HEIGHT / MAP_HEIGHT
 display = pygame.display.set_mode((10, 10))
 font = pygame.font.Font(None, 50)
 small_font = pygame.font.Font(None, 30)
+
+MAX_GENS = 50
