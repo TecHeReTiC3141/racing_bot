@@ -38,7 +38,7 @@ class EchoPoint:
         cur_mask = pygame.mask.from_surface(cur_surf)
         angle += self.angle_delta
         angle %= (2 * pi)
-        eps = .1
+        eps = .5
         while not mask.overlap(cur_mask, tuple(cur_point)) \
                 and 0 <= cur_point.x <= DISP_WIDTH and 0 <= cur_point.y <= DISP_HEIGHT:
 
@@ -95,7 +95,7 @@ class RelEchoPoint(EchoPoint):
 
 
 class Car:
-    MAX_SPEED = 5.
+    MAX_SPEED = 7.5
     SPEED_EPS = .2
     ANGLE_EPS = .05
     image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load('images/bolid.png'),
