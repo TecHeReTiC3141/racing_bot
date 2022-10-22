@@ -81,6 +81,9 @@ class EchoPoint:
 
             surface.blit(dis, dist_pos)
 
+    @property
+    def dist(self):
+        return dist(self.rect.center, self.coll)
 
 class RelEchoPoint(EchoPoint):
 
@@ -97,7 +100,7 @@ class RelEchoPoint(EchoPoint):
 class Car:
     MAX_SPEED = 5.
     SPEED_EPS = .2
-    ANGLE_EPS = .05
+    ANGLE_EPS = .04
     image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load('images/bolid.png'),
                                                            (25, 62)), 270).convert_alpha()
 
@@ -111,7 +114,7 @@ class Car:
         self.mask = pygame.mask.from_surface(self.image)
 
         self.score = 0
-        self.loop = 0
+        self.alive = True
 
         self.echopoints: dict[str, EchoPoint] = {
             'forward': EchoPoint(self.rect.midright, 0, True, 'width', 'height', 1, -1, cos, sin),

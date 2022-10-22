@@ -23,7 +23,7 @@ def setup_neat():
     return winner
 
 
-def main(genomes: list[tuple], config, is_eval=False):
+def main():
     level = gen_level()
 
     while True:
