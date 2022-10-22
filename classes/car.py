@@ -40,7 +40,8 @@ class EchoPoint:
         angle %= (2 * pi)
         eps = .5
         while not mask.overlap(cur_mask, tuple(cur_point)) \
-                and 0 <= cur_point.x <= DISP_WIDTH and 0 <= cur_point.y <= DISP_HEIGHT:
+                and 0 <= cur_point.x <= DISP_WIDTH and 0 <= cur_point.y <= DISP_HEIGHT \
+                and dist(cur_point, self.rect.center) < 200:
 
             if angle == pi / 2:
                 bias = (0, -1 if angle < pi else 1)
@@ -70,7 +71,7 @@ class EchoPoint:
         point, coll = pygame.Vector2(self.rect.center), pygame.Vector2(self.coll)
         pygame.draw.circle(surface, self.color, point, 5)
         pygame.draw.line(surface, 'darkgreen', point,
-                         self.get_lines_intersection(*point, angle), 2)
+                         coll, 2)
         pygame.draw.circle(surface, 'red', coll, 5)
         if show_dist and dist(point, coll) > 60:
             dis = pygame.transform.rotate(small_font.render(str(round(dist(point, coll), 1)),
@@ -85,8 +86,9 @@ class EchoPoint:
 
 class RelEchoPoint(EchoPoint):
 
-    def __init__(self, rel: EchoPoint, dx, dy):
-        super().__init__(rel.rect.center, -rel.angle_delta, rel.rotated, 'width', 'height', dx, dy, sin, cos)
+    def __init__(self, rel: EchoPoint, angle_delta, dx, dy, enabled=True):
+        super().__init__(rel.rect.center, angle_delta, rel.rotated, 'width', 'height', dx, dy, sin, cos,
+                         enabled=enabled)
         self.rel = rel
 
     def update(self, center: pygame.Vector2, image_size, angle):
@@ -113,7 +115,6 @@ class Car:
 
         self.echopoints: dict[str, EchoPoint] = {
             'forward': EchoPoint(self.rect.midright, 0, True, 'width', 'height', 1, -1, cos, sin),
-            'back': EchoPoint(self.rect.midleft, pi, True, 'width', 'height', -1, 1, cos, sin),
             'left': EchoPoint(self.rect.midtop, -pi / 2, False, 'height', 'height', -1, -1, sin, cos, 'blue',
                               enabled=False),
             'right': EchoPoint(self.rect.midbottom, pi / 2, False, 'height', 'height', 1, 1, sin, cos,
@@ -121,14 +122,14 @@ class Car:
         }
 
         self.rel_echopoints: dict[str, RelEchoPoint] = {
-            'forward_left': RelEchoPoint(self.echopoints['left'], self.rect.width // 10 * 3,
+            'forward_left': RelEchoPoint(self.echopoints['left'], pi / 4, self.rect.width // 10 * 3,
                                          -self.rect.width // 10 * 3),
-            'forward_right': RelEchoPoint(self.echopoints['right'], self.rect.width // 10 * 3,
+            'forward_right': RelEchoPoint(self.echopoints['right'], -pi / 4, self.rect.width // 10 * 3,
                                           -self.rect.width // 10 * 3),
-            'back_left': RelEchoPoint(self.echopoints['left'], -self.rect.width // 10 * 3,
-                                      self.rect.width // 10 * 4),
-            'back_right': RelEchoPoint(self.echopoints['right'], -self.rect.width // 10 * 3,
-                                       self.rect.width // 10 * 4),
+            'back_left': RelEchoPoint(self.echopoints['left'], pi / 2, -self.rect.width // 10 * 3,
+                                      self.rect.width // 10 * 4, enabled=False),
+            'back_right': RelEchoPoint(self.echopoints['right'], -pi / 2, -self.rect.width // 10 * 3,
+                                       self.rect.width // 10 * 4, enabled=False),
         }
 
     def draw(self, surface: pygame.Surface, show_dist: bool):
@@ -174,11 +175,13 @@ class Car:
                                          (self.rotated_image if self.echopoints[
                                              echo].rotated else self.image).get_size(),
                                          self.angle)
-            self.echopoints[echo].find_collisions(self.angle, level_mask)
+            if self.echopoints[echo].enabled:
+                self.echopoints[echo].find_collisions(self.angle, level_mask)
 
         for echo in self.rel_echopoints:
             self.rel_echopoints[echo].update(pygame.Vector2(self.rect.center),
                                              (self.rotated_image if self.rel_echopoints[
                                                  echo].rotated else self.image).get_size(),
                                              self.angle)
-            self.rel_echopoints[echo].find_collisions(self.angle, level_mask)
+            if self.rel_echopoints[echo].enabled:
+                self.rel_echopoints[echo].find_collisions(self.angle, level_mask)

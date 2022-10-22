@@ -3,6 +3,7 @@ from pygame.locals import *
 from math import *
 from random import *
 from pathlib import Path
+from neat import Config
 
 pygame.init()
 

@@ -5,7 +5,7 @@ class Level:
 
     def __init__(self, inner: list[tuple], outer: list[tuple]):
         self.cars = [Car(DISP_WIDTH // 2, DISP_HEIGHT // 2)
-                     for i in range(8)]
+                     for i in range(15)]
         self.surface = pygame.Surface((DISP_WIDTH, DISP_HEIGHT))
         self.inner = inner
         self.outer = outer
@@ -18,7 +18,7 @@ class Level:
         pygame.draw.polygon(self.surface, 'black', self.inner, width=2)
         self.mask = pygame.mask.from_surface(self.surface)
         self.switch_mask = False
-        self.show_dist = True
+        self.show_dist = False
         self.show_lines_and_colls = True
 
     def game_cycle(self):
