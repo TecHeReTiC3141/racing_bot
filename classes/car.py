@@ -85,6 +85,7 @@ class EchoPoint:
     def dist(self):
         return dist(self.rect.center, self.coll)
 
+
 class RelEchoPoint(EchoPoint):
 
     def __init__(self, rel: EchoPoint, angle_delta, dx, dy, enabled=True):
@@ -100,21 +101,24 @@ class RelEchoPoint(EchoPoint):
 class Car:
     MAX_SPEED = 5.
     SPEED_EPS = .2
-    ANGLE_EPS = .04
+    ANGLE_EPS = .05
     image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load('images/bolid.png'),
                                                            (25, 62)), 270).convert_alpha()
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, genome: neat.DefaultGenome, config):
         self.rect = self.image.get_rect(center=(x, y))
         self.rotated_image = self.image.copy()
-        self.speed = 0
-        self.angle = 0
+        self.speed = self.MAX_SPEED
+        self.angle = -pi
         self.velocity = pygame.math.Vector2()
         self.surf_coords: tuple = self.rect.topleft
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.score = 0
+        self.g = genome
+        self.g.fitness = 0
+        self.net = neat.nn.FeedForwardNetwork.create(genome, config)
         self.alive = True
+        self.delay = 0
 
         self.echopoints: dict[str, EchoPoint] = {
             'forward': EchoPoint(self.rect.midright, 0, True, 'width', 'height', 1, -1, cos, sin),
@@ -152,26 +156,40 @@ class Car:
             self.rel_echopoints[echo].draw_coll_line(surface, 0, show_dist)
 
     def move(self):
-        keys = pygame.key.get_pressed()
-        if keys[K_w]:
-            self.speed = min(self.speed + self.SPEED_EPS, 5)
-        elif keys[K_s]:
-            self.speed = max(self.speed - self.SPEED_EPS, -5)
-        else:
-            if self.speed > 0:
-                self.speed -= self.SPEED_EPS / 2
-            elif self.speed < 0:
-                self.speed += self.SPEED_EPS / 2
-        if keys[K_a]:
+        output = self.net.activate((self.echopoints['forward'].dist,
+                                    self.rel_echopoints['forward_left'].dist,
+                                    self.rel_echopoints['forward_right'].dist
+                                    ))
+        if -1 <= output[0] < -.3:
             self.angle += self.ANGLE_EPS
-        if keys[K_d]:
+        elif .3 <= output[0] < 1:
             self.angle -= self.ANGLE_EPS
+
+        # keys = pygame.key.get_pressed()
+        # self.speed = max(self.speed - self.SPEED_EPS, -5)
+        # if keys[K_w]:
+        #     self.speed = min(self.speed + self.SPEED_EPS, 5)
+        # elif keys[K_s]:
+        #     self.speed = max(self.speed - self.SPEED_EPS, -5)
+        # else:
+        #     if self.speed > 0:
+        #         self.speed -= self.SPEED_EPS / 2
+        #     elif self.speed < 0:
+        #         self.speed += self.SPEED_EPS / 2
+        # if keys[K_a]:
+        #     self.angle += self.ANGLE_EPS
+        # if keys[K_d]:
+        #     self.angle -= self.ANGLE_EPS
+
         # self.speed = self.MAX_SPEED
 
     def update(self, level_mask: pygame.mask.Mask):
+        self.delay -= 1
         self.move()
         self.rect.move_ip((round(cos(self.angle) * self.speed),
                            round(-sin(self.angle) * self.speed)))
+
+        self.g.fitness += .1
 
         for echo in self.echopoints:
 

@@ -16,4 +16,4 @@ display = pygame.display.set_mode((10, 10))
 font = pygame.font.Font(None, 50)
 small_font = pygame.font.Font(None, 30)
 
-MAX_GENS = 50
+MAX_GENS = 100

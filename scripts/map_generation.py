@@ -2,7 +2,7 @@ from classes.level import *
 from pytmx.util_pygame import load_pygame
 
 
-def gen_level() -> Level:
+def gen_level(genomes, config) -> Level:
     path = Path('scripts/cart_map2.tmx')
 
     level_map = load_pygame(path)
@@ -23,6 +23,9 @@ def gen_level() -> Level:
                                  obj.height * YSCALE, obj.width * YSCALE)
         elif obj.name == 'money':
             money.append(Money(obj.x * XSCALE, obj.y * YSCALE))
+        elif obj.name == 'bad_money':
+            money.append(BadMoney(obj.x * XSCALE, obj.y * YSCALE))
 
-    level = Level(inner, outer, money, finish_line)
+
+    level = Level(inner, outer, money, finish_line, genomes, config)
     return level

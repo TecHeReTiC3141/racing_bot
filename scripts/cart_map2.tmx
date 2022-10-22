@@ -1,39 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="128" tileheight="128" infinite="0" nextlayerid="3" nextobjectid="17">
+<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="128" tileheight="128" infinite="0" nextlayerid="3" nextobjectid="57">
  <tileset firstgid="1" source="../../PygamePlatformer2/levels/tilesets/gameObjs.tsx"/>
  <objectgroup id="2" name="RacingCart">
-  <object id="1" name="inner" x="452.005" y="1569.6">
-   <polygon points="0,0 234.426,366.171 795.372,485.486 1561.44,518.4 2494.96,448.457 2800.55,-98.7429 2967.99,-650.057 2750.31,-1209.6 2432.16,-1197.26 2386.12,-806.4 2490.77,28.8 2310.77,238.629 1527.95,296.229 1033.98,160.457 795.372,-316.8 456.293,-892.8 -41.8617,-1057.37 -180.005,-510.171"/>
+  <object id="1" name="inner" x="510.098" y="1622.87">
+   <polygon points="0,0 230.364,339.843 781.591,450.58 1534.38,481.127 2451.73,416.213 2752.02,-91.6433 2916.56,-603.318 2702.66,-1122.63 2398.02,-1083.18 2380.78,-748.42 2291.61,-135.271 2174.73,205.472 1507.48,386.93 1022.06,260.92 781.591,-294.022 448.387,-828.608 -41.1364,-981.346 -176.886,-473.49"/>
   </object>
-  <object id="2" name="outer" x="639.812" y="256.644">
-   <polygon points="0,0 504.721,264.392 899.543,817.581 1127.48,1289.42 1546.73,1362.64 1970.04,1289.42 1904.91,475.905 2039.24,-154.568 2686.42,-199.311 3097.52,500.311 2861.44,1586.35 2527.67,2200.55 1632.2,2208.69 -32.5626,1915.82 -512.862,1545.68 -606.479,854.189 -476.229,183.041"/>
+  <object id="2" name="outer" x="645.752" y="242.826">
+   <polygon points="0,0 504.721,264.392 899.543,817.581 1127.48,1289.42 1546.73,1362.64 1866.04,1221.42 1904.91,475.905 2067.24,-82.568 2710.42,-139.311 3097.52,500.311 2861.44,1586.35 2527.67,2200.55 1632.2,2208.69 -32.5626,1915.82 -512.862,1545.68 -606.479,854.189 -476.229,183.041"/>
   </object>
-  <object id="3" name="finish_line" gid="19" x="2154.39" y="1595.52" width="359.922" height="89.9849" rotation="89.6575"/>
-  <object id="6" name="money" x="1181.82" y="878.788" width="227.273" height="221.212">
+  <object id="3" name="finish_line" gid="19" x="2176.39" y="1687.52" width="359.922" height="89.9849" rotation="89.6575"/>
+  <object id="6" name="money" x="1157.82" y="890.788" width="227.273" height="221.212">
    <ellipse/>
   </object>
-  <object id="8" name="money" x="513.636" y="319.697" width="227.273" height="221.212">
+  <object id="8" name="money" x="493.636" y="355.697" width="227.273" height="221.212">
    <ellipse/>
   </object>
   <object id="10" name="money" x="98.4847" y="1107.58" width="175.758" height="184.848">
    <ellipse/>
   </object>
-  <object id="11" name="money" x="881.818" y="2043.94" width="175.758" height="184.848">
+  <object id="11" name="money" x="848.485" y="2016.67" width="175.758" height="184.848">
    <ellipse/>
   </object>
   <object id="12" name="money" x="1957.58" y="2131.82" width="242.425" height="242.424">
    <ellipse/>
   </object>
-  <object id="13" name="money" x="3393.94" y="1000" width="242.425" height="242.424">
+  <object id="13" name="money" x="3366.67" y="1163.64" width="242.425" height="242.424">
    <ellipse/>
   </object>
   <object id="14" name="money" x="3018.18" y="2042.42" width="242.425" height="242.424">
    <ellipse/>
   </object>
-  <object id="15" name="money" x="2915.15" y="103.03" width="242.425" height="242.424">
+  <object id="15" name="money" x="3007.76" y="195.03" width="242.425" height="242.424">
    <ellipse/>
   </object>
-  <object id="16" name="money" x="2600" y="818.182" width="242.425" height="242.424">
+  <object id="16" name="money" x="2599.15" y="979.273" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="17" name="money" x="2526.3" y="1282.79" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="18" name="money" x="2599.76" y="598.424" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="19" name="money" x="3290.91" y="400" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="20" name="money" x="3267.39" y="1497.7" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="21" name="money" x="2484.85" y="2163.64" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="22" name="money" x="1362.79" y="1230.79" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="23" name="money" x="1510.79" y="1516.79" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="24" name="money" x="954.787" y="570.788" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="25" name="money" x="734.363" y="455.394" width="227.273" height="221.212">
+   <ellipse/>
+  </object>
+  <object id="26" name="money" x="220.364" y="463.394" width="227.273" height="221.212">
+   <ellipse/>
+  </object>
+  <object id="27" name="money" x="92.3635" y="747.394" width="227.273" height="221.212">
+   <ellipse/>
+  </object>
+  <object id="29" name="money" x="152.364" y="1435.39" width="227.273" height="221.212">
+   <ellipse/>
+  </object>
+  <object id="31" name="money" x="306.363" y="1711.39" width="227.273" height="221.212">
+   <ellipse/>
+  </object>
+  <object id="32" name="money" x="538.485" y="1911.21" width="227.273" height="221.212">
+   <ellipse/>
+  </object>
+  <object id="33" name="money" x="1834.79" y="1610.79" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="36" name="bad_money" x="2254.12" y="1832.3" width="222.425" height="222.424">
+   <ellipse/>
+  </object>
+  <object id="37" name="money" x="1166.67" y="2071.21" width="175.758" height="184.848">
+   <ellipse/>
+  </object>
+  <object id="38" name="money" x="1448.48" y="2125.76" width="175.758" height="184.848">
+   <ellipse/>
+  </object>
+  <object id="39" name="money" x="1709.09" y="2156.06" width="175.758" height="184.848">
+   <ellipse/>
+  </object>
+  <object id="40" name="money" x="2257.58" y="2189.39" width="175.758" height="184.848">
+   <ellipse/>
+  </object>
+  <object id="41" name="money" x="2792.85" y="2173.52" width="175.758" height="184.848">
+   <ellipse/>
+  </object>
+  <object id="42" name="money" x="3436.36" y="763.636" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="43" name="money" x="2692.61" y="336.788" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="44" name="money" x="2130.79" y="1624.79" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="45" name="money" x="3138.79" y="1766.79" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="46" name="money" x="2375.45" y="1524.79" width="222.425" height="222.424">
+   <ellipse/>
+  </object>
+  <object id="47" name="bad_money" x="2615.45" y="1566.12" width="222.425" height="222.424">
+   <ellipse/>
+  </object>
+  <object id="48" name="bad_money" x="2804.79" y="94.788" width="222.425" height="222.424">
+   <ellipse/>
+  </object>
+  <object id="49" name="money" x="1612.79" y="1742.79" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="50" name="money" x="2004.79" y="1766.79" width="242.425" height="242.424">
+   <ellipse/>
+  </object>
+  <object id="51" name="bad_money" x="2326.79" y="1716.79" width="222.425" height="222.424">
+   <ellipse/>
+  </object>
+  <object id="52" name="bad_money" x="2480.79" y="1752.79" width="222.425" height="222.424">
+   <ellipse/>
+  </object>
+  <object id="53" name="bad_money" x="2222.79" y="1810.79" width="222.425" height="222.424">
+   <ellipse/>
+  </object>
+  <object id="54" name="bad_money" x="2330.79" y="1758.79" width="222.425" height="222.424">
+   <ellipse/>
+  </object>
+  <object id="55" name="bad_money" x="2540.79" y="1544.79" width="222.425" height="222.424">
+   <ellipse/>
+  </object>
+  <object id="56" name="bad_money" x="2534.79" y="1594.79" width="222.425" height="222.424">
    <ellipse/>
   </object>
  </objectgroup>

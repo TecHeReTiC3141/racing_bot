@@ -14,20 +14,31 @@ class GameObject:
 
 class Money(GameObject):
     value = 10
+    size = 50
 
     def __init__(self, x, y):
-        super().__init__(x, y, 70, 70)
+        super().__init__(x, y, self.size, self.size)
         self.ridden_cars: dict[Car, bool] = {}
         self.surface.set_colorkey('yellow')
         self.surface.fill('yellow')
-        pygame.draw.circle(self.surface, 'gold', (35, 35), 35)
+        pygame.draw.circle(self.surface, 'gold', (self.size // 2, self.size // 2), self.size // 2)
 
     def interact(self, car: Car):
         if self.ridden_cars.get(car, False):
             return
         if self.rect.colliderect(car.rect):
-            car.score += self.value
+            car.g.fitness += self.value
             self.ridden_cars[car] = True
+
+
+class BadMoney(Money):
+    value = -25
+
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.surface.set_colorkey('yellow')
+        self.surface.fill('yellow')
+        pygame.draw.circle(self.surface, 'red', (self.size // 2, self.size // 2), self.size // 2)
 
 
 class Finish(GameObject):
@@ -39,21 +50,21 @@ class Finish(GameObject):
         self.cars_loops: dict[Car, int] = {}
 
     def interact(self, car: Car, money: list[Money]):
-        for mon in money:
-            if not mon.ridden_cars.get(car, False):
-                return
-        if self.rect.colliderect(car.rect):
+        if car.delay <= 0 and self.rect.colliderect(car.rect):
             for mon in money:
                 mon.ridden_cars[car] = False
-            car.score += self.value
+            car.g.fitness += self.value
+            car.delay = 200
 
 
 class Level:
 
     def __init__(self, inner: list[tuple], outer: list[tuple],
-                 coins: list[GameObject], finish_line: Finish):
-        self.cars = [Car(DISP_WIDTH // 2 + 200, DISP_HEIGHT // 2 + 150)
-                     for _ in range(15)]
+                 coins: list[GameObject], finish_line: Finish, genome, config):
+        self.genome = genome
+        self.config = config
+        self.cars: list[Car] = [Car(DISP_WIDTH // 2 + 50, DISP_HEIGHT // 2 + 150, g, config)
+                     for _, g in genome]
         self.surface = pygame.Surface((DISP_WIDTH, DISP_HEIGHT))
         self.inner = inner
         self.outer = outer
@@ -82,18 +93,22 @@ class Level:
                     self.switch_mask = not self.switch_mask
                 elif event.key == K_i:
                     self.show_dist = not self.show_dist
-
+        cars_alive = False
         for car in self.cars:
             if not car.alive:
                 continue
             if self.mask.overlap(car.mask, car.surf_coords):
                 car.alive = False
+                car.g.fitness -= 50
                 continue
             car.update(self.mask)
 
             for obj in self.coins:
                 obj.interact(car)
-                self.finish.interact(car, money=self.coins)
+            self.finish.interact(car, money=self.coins)
+            cars_alive = True
+
+        return cars_alive
 
     def draw(self, surface: pygame.Surface):
         self.surface.fill('grey')
@@ -104,7 +119,8 @@ class Level:
         pygame.draw.lines(self.surface, 'black', True, self.inner, width=2)
 
         for car in self.cars:
-
+            if not car.alive:
+                continue
             car.draw(self.surface, self.show_dist)
             if self.switch_mask and self.mask.overlap(car.mask, car.surf_coords):
                 overlap_mask = self.mask.overlap_mask(car.mask, car.surf_coords)
@@ -114,8 +130,7 @@ class Level:
         for obj in self.coins:
             obj.draw(surface)
 
-        self.surface.blit(font.render(f"SHOW_DIST: {'YES' if self.show_dist else 'NO'}",
-                                      True, 'red'), (10, 10))
-        self.surface.blit(font.render(f"CAR SCORE: {self.cars[0].score}",
-                                      True, 'red'), (300, 10))
+        self.surface.blit(font.render(f'Cars Remained: {len([i for i in self.cars if i.alive])}',
+                                 True, 'red'), (300, 10))
+
         surface.blit(self.surface, (0, 0))
