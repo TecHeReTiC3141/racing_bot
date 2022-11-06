@@ -14,7 +14,7 @@ class GameObject:
 
 class Money(GameObject):
     value = 10
-    size = 50
+    size = 30
 
     def __init__(self, x, y):
         super().__init__(x, y, self.size, self.size)
@@ -26,13 +26,13 @@ class Money(GameObject):
     def interact(self, car: Car):
         if self.ridden_cars.get(car, False):
             return
-        if self.rect.colliderect(car.rect):
+        if self.rect.colliderect(car.center_rect):
             car.g.fitness += self.value
             self.ridden_cars[car] = True
 
 
 class BadMoney(Money):
-    value = -25
+    value = -200
 
     def __init__(self, x, y):
         super().__init__(x, y)
@@ -63,7 +63,7 @@ class Level:
                  coins: list[GameObject], finish_line: Finish, genome, config):
         self.genome = genome
         self.config = config
-        self.cars: list[Car] = [Car(DISP_WIDTH // 2 + 50, DISP_HEIGHT // 2 + 150, g, config)
+        self.cars: list[Car] = [Car(*finish_line.rect.center, g, config)
                      for _, g in genome]
         self.surface = pygame.Surface((DISP_WIDTH, DISP_HEIGHT))
         self.inner = inner
@@ -103,9 +103,9 @@ class Level:
                 continue
             car.update(self.mask)
 
-            for obj in self.coins:
-                obj.interact(car)
-            self.finish.interact(car, money=self.coins)
+            # for obj in self.coins:
+            #     obj.interact(car)
+            # self.finish.interact(car, money=self.coins)
             cars_alive = True
 
         return cars_alive

@@ -1,6 +1,5 @@
-import neat
-
 from scripts.map_generation import *
+from time import sleep
 
 display = pygame.display.set_mode((DISP_WIDTH, DISP_HEIGHT))
 pygame.display.set_caption('Racing Game')

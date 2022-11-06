@@ -107,9 +107,12 @@ class Car:
 
     def __init__(self, x, y, genome: neat.DefaultGenome, config):
         self.rect = self.image.get_rect(center=(x, y))
+        self.center_rect = pygame.Rect(self.rect.centerx - self.rect.height // 2,
+                                       self.rect.centery - self.rect.height // 2,
+                                       self.rect.height, self.rect.height)
         self.rotated_image = self.image.copy()
         self.speed = self.MAX_SPEED
-        self.angle = -pi
+        self.angle = 0
         self.velocity = pygame.math.Vector2()
         self.surf_coords: tuple = self.rect.topleft
         self.mask = pygame.mask.from_surface(self.image)
@@ -123,9 +126,9 @@ class Car:
         self.echopoints: dict[str, EchoPoint] = {
             'forward': EchoPoint(self.rect.midright, 0, True, 'width', 'height', 1, -1, cos, sin),
             'left': EchoPoint(self.rect.midtop, -pi / 2, False, 'height', 'height', -1, -1, sin, cos, 'blue',
-                              enabled=False),
+                              ),
             'right': EchoPoint(self.rect.midbottom, pi / 2, False, 'height', 'height', 1, 1, sin, cos,
-                               enabled=False),
+                               ),
         }
 
         self.rel_echopoints: dict[str, RelEchoPoint] = {
@@ -158,11 +161,13 @@ class Car:
     def move(self):
         output = self.net.activate((self.echopoints['forward'].dist,
                                     self.rel_echopoints['forward_left'].dist,
-                                    self.rel_echopoints['forward_right'].dist
+                                    self.rel_echopoints['forward_right'].dist,
+                                    self.echopoints['right'].dist,
+                                    self.echopoints['left'].dist,
                                     ))
-        if -1 <= output[0] < -.3:
+        if output[0] > output[1]:
             self.angle += self.ANGLE_EPS
-        elif .3 <= output[0] < 1:
+        else:
             self.angle -= self.ANGLE_EPS
 
         # keys = pygame.key.get_pressed()

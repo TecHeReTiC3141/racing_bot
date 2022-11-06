@@ -6,6 +6,8 @@ def gen_level(genomes, config) -> Level:
     path = Path('scripts/cart_map2.tmx')
 
     level_map = load_pygame(path)
+    MAP_WIDTH, MAP_HEIGHT = 128 * level_map.width, 128 * level_map.height
+    XSCALE, YSCALE = DISP_WIDTH / MAP_WIDTH, DISP_HEIGHT / MAP_HEIGHT
 
     cart = level_map.get_layer_by_name('RacingCart')
     inner: list[tuple] = []
@@ -22,9 +24,11 @@ def gen_level(genomes, config) -> Level:
             finish_line = Finish(obj.x * XSCALE, obj.y * YSCALE,
                                  obj.height * YSCALE, obj.width * YSCALE)
         elif obj.name == 'money':
-            money.append(Money(obj.x * XSCALE, obj.y * YSCALE))
+            money.append(Money(obj.x * XSCALE + obj.width // 2 * XSCALE,
+                               obj.y * YSCALE + obj.height // 2 * YSCALE))
         elif obj.name == 'bad_money':
-            money.append(BadMoney(obj.x * XSCALE, obj.y * YSCALE))
+            money.append(BadMoney(obj.x * XSCALE + obj.width // 2 * XSCALE,
+                                  obj.y * YSCALE + obj.height // 2 * YSCALE))
 
 
     level = Level(inner, outer, money, finish_line, genomes, config)
